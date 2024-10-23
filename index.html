@@ -32,11 +32,23 @@
     }
 
     .game-container {
-        display: grid;
+        display: none;
         grid-template-columns: 250px 1fr 250px;
         gap: 20px;
         max-width: 1200px;
         margin: 0 auto;
+    }
+
+    #startButton {
+        padding: 20px 40px;
+        font-size: 24px;
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin: 20px auto;
+        display: block;
     }
 
     .character-select {
@@ -170,12 +182,26 @@
     .special-attack {
         animation: punch 0.3s ease;
     }
+
+    .settings-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.9);
+        padding: 30px;
+        border-radius: 15px;
+        z-index: 1000;
+    }
 </style>
 </head>
 <body>
     <div class="header">
         <h1>🥊 Ultimate Boxing Championship 2024 🏆</h1>
         <button onclick="showProfile()">👤 Perfil y Logros</button>
+        <button id="startButton" onclick="startGame()">🎮 JUGAR</button>
+        <button onclick="showSettings()" class="settings-btn">⚙️ Ajustes</button>
     </div>
 
     <div class="game-container">
@@ -263,6 +289,18 @@
         <button onclick="hideProfile()">Cerrar</button>
     </div>
 
+    <div id="settingsModal" class="settings-modal">
+        <h2>Ajustes</h2>
+        <select id="language">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+        </select>
+        <button onclick="contactUs()">Contactar</button>
+        <input type="text" id="adminCode" placeholder="Código Admin">
+        <button onclick="checkAdminCode()">Verificar</button>
+        <button onclick="hideSettings()">Cerrar</button>
+    </div>
+
     <script>
         let playerStats = {
             health: 1000,
@@ -287,6 +325,24 @@
         let selectedCharacter = '🤠';
         let comboCounter = 0;
         let lastHitTime = 0;
+        let isAdmin = false;
+
+        function startGame() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            }
+            document.querySelector('.game-container').style.display = 'grid';
+            document.getElementById('startButton').style.display = 'none';
+            
+            // Make controls bigger for mobile
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.controls button').forEach(btn => {
+                    btn.style.padding = '25px 35px';
+                    btn.style.fontSize = '24px';
+                });
+            }
+        }
 
         function selectCharacter(name, emoji, health, damage) {
             playerStats.name = name;
@@ -312,7 +368,7 @@
         function updateHealthBars() {
             const playerPercentage = (playerStats.health / playerStats.maxHealth) * 100;
             const botPercentage = (health2 / 1000) * 100;
-            
+
             document.getElementById('playerHealthBar').style.width = `${playerPercentage}%`;
             document.getElementById('botHealthBar').style.width = `${botPercentage}%`;
         }
@@ -346,11 +402,11 @@
             health2 -= damage;
             playerStats.hitsLanded++;
             playerStats.totalDamage += damage;
-            
+
             updateStats();
             updateHealthBars();
             checkWin();
-            
+
             setTimeout(() => playerCooldown = false, 500);
         }
 
@@ -398,14 +454,47 @@
             document.getElementById('profileModal').style.display = 'none';
         }
 
+        function showSettings() {
+            document.getElementById('settingsModal').style.display = 'block';
+        }
+
+        function hideSettings() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function contactUs() {
+            window.location.href = 'mailto:contact@websim.io';
+        }
+
+        function checkAdminCode() {
+            const code = document.getElementById('adminCode').value;
+            if (code === 'adminon') {
+                const password = prompt('Contraseña:');
+                if (password === 'ooo64') {
+                    isAdmin = true;
+                    // Add admin character
+                    const adminCharacter = `
+                        <div class="character-card" onclick="selectCharacter('Administrador', '👑', Infinity, 500)">
+                            <h3>Administrador</h3>
+                            <div style="font-size: 40px;">👑</div>
+                            <p>Ataque: ⭐⭐⭐⭐⭐</p>
+                            <p>Defensa: ∞</p>
+                        </div>
+                    `;
+                    document.querySelector('.character-select').innerHTML += adminCharacter;
+                    alert('¡Modo Administrador activado!');
+                }
+            }
+        }
+
         function move(direction) {
             const boxer1 = document.getElementById('boxer1');
             const ring = document.getElementById('ring');
             const step = 20;
-            
+
             const currentLeft = parseInt(boxer1.style.left) || 0;
             const currentTop = parseInt(boxer1.style.top) || 0;
-            
+
             switch(direction) {
                 case 'up':
                     if (currentTop > step) boxer1.style.top = (currentTop - step) + 'px';
