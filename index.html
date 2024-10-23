@@ -1,0 +1,438 @@
+<html><head><base href="https://websim.io">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🥊 Ultimate Boxing Championship 2024 🏆</title>
+<style>
+    :root {
+        --primary: #ff4757;
+        --secondary: #2f3542;
+        --accent: #ffa502;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+    }
+
+    .header {
+        text-align: center;
+        padding: 20px;
+        background: rgba(0,0,0,0.5);
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        color: var(--accent);
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        font-size: 2.5em;
+    }
+
+    .game-container {
+        display: grid;
+        grid-template-columns: 250px 1fr 250px;
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .character-select {
+        background: rgba(0,0,0,0.7);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+    }
+
+    .character-card {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 10px;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    .character-card:hover {
+        transform: scale(1.05);
+        background: rgba(255,255,255,0.2);
+    }
+
+    .character-card.selected {
+        border: 2px solid var(--accent);
+    }
+
+    .ring {
+        width: 400px;
+        height: 400px;
+        margin: 20px auto;
+        border: 8px solid #gold;
+        position: relative;
+        background: repeating-linear-gradient(
+            45deg,
+            #2c3e50,
+            #2c3e50 10px,
+            #34495e 10px,
+            #34495e 20px
+        );
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        border-radius: 5px;
+    }
+
+    .boxer {
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 40px;
+        transition: all 0.3s ease;
+    }
+
+    .stats-panel {
+        background: rgba(0,0,0,0.7);
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .health-bar {
+        height: 20px;
+        background: #444;
+        border-radius: 10px;
+        margin: 10px 0;
+        overflow: hidden;
+    }
+
+    .health-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #ff4757, #ff6b81);
+        transition: width 0.3s;
+    }
+
+    .controls {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    button {
+        background: var(--accent);
+        border: none;
+        padding: 12px 20px;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        background: #ffc107;
+    }
+
+    .profile-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.9);
+        padding: 30px;
+        border-radius: 15px;
+        z-index: 1000;
+    }
+
+    .achievements {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .achievement {
+        background: rgba(255,255,255,0.1);
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    @keyframes punch {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+
+    .special-attack {
+        animation: punch 0.3s ease;
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <h1>🥊 Ultimate Boxing Championship 2024 🏆</h1>
+        <button onclick="showProfile()">👤 Perfil y Logros</button>
+    </div>
+
+    <div class="game-container">
+        <div class="character-select">
+            <h2>Selecciona tu Luchador</h2>
+            <div class="character-card" onclick="selectCharacter('Jonathan', '🤠', 1000, 150)">
+                <h3>Jonathan</h3>
+                <div style="font-size: 40px;">🤠</div>
+                <p>Ataque: ⭐⭐⭐</p>
+                <p>Defensa: ⭐⭐⭐⭐</p>
+            </div>
+            <div class="character-card" onclick="selectCharacter('Vajua', '🦸‍♂️', 800, 200)">
+                <h3>Vajua</h3>
+                <div style="font-size: 40px;">🦸‍♂️</div>
+                <p>Ataque: ⭐⭐⭐⭐⭐</p>
+                <p>Defensa: ⭐⭐</p>
+            </div>
+            <div class="character-card" onclick="selectCharacter('Ninja', '🥷', 900, 175)">
+                <h3>Ninja</h3>
+                <div style="font-size: 40px;">🥷</div>
+                <p>Ataque: ⭐⭐⭐⭐</p>
+                <p>Defensa: ⭐⭐⭐</p>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="stats-panel">
+                <div>
+                    <h3>Jugador: <span id="playerName">Selecciona un personaje</span></h3>
+                    <div class="health-bar">
+                        <div id="playerHealthBar" class="health-fill" style="width: 100%;"></div>
+                    </div>
+                    <p>Vida: <span id="playerHealth">1000</span></p>
+                </div>
+                <div>
+                    <h3>Bot: CyberBoxer 3000</h3>
+                    <div class="health-bar">
+                        <div id="botHealthBar" class="health-fill" style="width: 100%;"></div>
+                    </div>
+                    <p>Vida: <span id="botHealth">1000</span></p>
+                </div>
+            </div>
+
+            <div class="ring" id="ring">
+                <div class="boxer" id="boxer1" style="top: 170px; left: 20px;">🤠</div>
+                <div class="boxer" id="boxer2" style="top: 170px; right: 20px;">🤖</div>
+            </div>
+
+            <div class="controls">
+                <button onclick="move('left')">⬅️</button>
+                <button onclick="move('up')">⬆️</button>
+                <button onclick="move('right')">➡️</button>
+                <button onclick="move('down')">⬇️</button>
+                <button onclick="attack()">🥊 Golpe Normal</button>
+                <button onclick="specialAttack()">⚡ Golpe Especial</button>
+            </div>
+        </div>
+
+        <div class="stats-panel">
+            <h2>Estadísticas de Combate</h2>
+            <p>Golpes Conectados: <span id="hitsLanded">0</span></p>
+            <p>Daño Total: <span id="totalDamage">0</span></p>
+            <p>Combos: <span id="combos">0</span></p>
+        </div>
+    </div>
+
+    <div id="profileModal" class="profile-modal">
+        <h2>Perfil del Jugador</h2>
+        <p>Victorias Totales: <span id="totalWins">0</span></p>
+        <p>Mejor Racha: <span id="bestStreak">0</span></p>
+        <div class="achievements">
+            <div class="achievement">
+                <h3>🥊 Primer KO</h3>
+                <p>Gana tu primera pelea</p>
+            </div>
+            <div class="achievement">
+                <h3>🏆 Campeón</h3>
+                <p>Gana 5 peleas seguidas</p>
+            </div>
+            <div class="achievement">
+                <h3>⚡ Combo Master</h3>
+                <p>Realiza un combo de 10 golpes</p>
+            </div>
+        </div>
+        <button onclick="hideProfile()">Cerrar</button>
+    </div>
+
+    <script>
+        let playerStats = {
+            health: 1000,
+            maxHealth: 1000,
+            damage: 100,
+            name: '',
+            hitsLanded: 0,
+            totalDamage: 0,
+            combos: 0
+        };
+
+        let gameStats = {
+            totalWins: localStorage.getItem('totalWins') || 0,
+            bestStreak: localStorage.getItem('bestStreak') || 0,
+            currentStreak: 0
+        };
+
+        let health1 = 1000;
+        let health2 = 1000;
+        let playerCooldown = false;
+        let botCooldown = false;
+        let selectedCharacter = '🤠';
+        let comboCounter = 0;
+        let lastHitTime = 0;
+
+        function selectCharacter(name, emoji, health, damage) {
+            playerStats.name = name;
+            playerStats.health = health;
+            playerStats.maxHealth = health;
+            playerStats.damage = damage;
+            selectedCharacter = emoji;
+            
+            document.getElementById('boxer1').textContent = emoji;
+            document.getElementById('playerName').textContent = name;
+            document.getElementById('playerHealth').textContent = health;
+            updateHealthBars();
+            
+            // Resaltar personaje seleccionado
+            document.querySelectorAll('.character-card').forEach(card => {
+                card.classList.remove('selected');
+                if(card.querySelector('h3').textContent === name) {
+                    card.classList.add('selected');
+                }
+            });
+        }
+
+        function updateHealthBars() {
+            const playerPercentage = (playerStats.health / playerStats.maxHealth) * 100;
+            const botPercentage = (health2 / 1000) * 100;
+            
+            document.getElementById('playerHealthBar').style.width = `${playerPercentage}%`;
+            document.getElementById('botHealthBar').style.width = `${botPercentage}%`;
+        }
+
+        function attack() {
+            if (playerCooldown) return;
+            performAttack(playerStats.damage);
+        }
+
+        function specialAttack() {
+            if (playerCooldown) return;
+            performAttack(playerStats.damage * 2);
+            document.getElementById('boxer1').classList.add('special-attack');
+            setTimeout(() => {
+                document.getElementById('boxer1').classList.remove('special-attack');
+            }, 300);
+        }
+
+        function performAttack(damage) {
+            playerCooldown = true;
+            const now = Date.now();
+            if (now - lastHitTime < 1000) {
+                comboCounter++;
+                playerStats.combos = Math.max(playerStats.combos, comboCounter);
+                document.getElementById('combos').textContent = playerStats.combos;
+            } else {
+                comboCounter = 1;
+            }
+            lastHitTime = now;
+
+            health2 -= damage;
+            playerStats.hitsLanded++;
+            playerStats.totalDamage += damage;
+            
+            updateStats();
+            updateHealthBars();
+            checkWin();
+            
+            setTimeout(() => playerCooldown = false, 500);
+        }
+
+        function updateStats() {
+            document.getElementById('botHealth').textContent = health2;
+            document.getElementById('hitsLanded').textContent = playerStats.hitsLanded;
+            document.getElementById('totalDamage').textContent = playerStats.totalDamage;
+        }
+
+        function checkWin() {
+            if (playerStats.health <= 0) {
+                alert('¡Has perdido!');
+                gameStats.currentStreak = 0;
+                saveGameStats();
+                resetGame();
+            } else if (health2 <= 0) {
+                alert('¡Has ganado!');
+                gameStats.totalWins++;
+                gameStats.currentStreak++;
+                gameStats.bestStreak = Math.max(gameStats.bestStreak, gameStats.currentStreak);
+                saveGameStats();
+                resetGame();
+            }
+        }
+
+        function saveGameStats() {
+            localStorage.setItem('totalWins', gameStats.totalWins);
+            localStorage.setItem('bestStreak', gameStats.bestStreak);
+        }
+
+        function resetGame() {
+            playerStats.health = playerStats.maxHealth;
+            health2 = 1000;
+            updateHealthBars();
+            updateStats();
+        }
+
+        function showProfile() {
+            document.getElementById('profileModal').style.display = 'block';
+            document.getElementById('totalWins').textContent = gameStats.totalWins;
+            document.getElementById('bestStreak').textContent = gameStats.bestStreak;
+        }
+
+        function hideProfile() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function move(direction) {
+            const boxer1 = document.getElementById('boxer1');
+            const ring = document.getElementById('ring');
+            const step = 20;
+            
+            const currentLeft = parseInt(boxer1.style.left) || 0;
+            const currentTop = parseInt(boxer1.style.top) || 0;
+            
+            switch(direction) {
+                case 'up':
+                    if (currentTop > step) boxer1.style.top = (currentTop - step) + 'px';
+                    break;
+                case 'down':
+                    if (currentTop < ring.offsetHeight - 60) boxer1.style.top = (currentTop + step) + 'px';
+                    break;
+                case 'left':
+                    if (currentLeft > step) boxer1.style.left = (currentLeft - step) + 'px';
+                    break;
+                case 'right':
+                    if (currentLeft < ring.offsetWidth - 60) boxer1.style.left = (currentLeft + step) + 'px';
+                    break;
+            }
+        }
+
+        // Bot AI
+        setInterval(() => {
+            if (!botCooldown && health2 > 0) {
+                botCooldown = true;
+                playerStats.health -= 50;
+                document.getElementById('playerHealth').textContent = playerStats.health;
+                updateHealthBars();
+                checkWin();
+                setTimeout(() => botCooldown = false, 1000);
+            }
+        }, 1500);
+    </script>
+</body>
+</html>
